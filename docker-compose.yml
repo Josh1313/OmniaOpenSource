@@ -1,0 +1,82 @@
+
+services:
+  ollama: 
+    image: licmartinez827899/omnia-ollama:1.0  # Updated to use Docker Hub image
+    volumes:
+      - /ollama/models:/ollama/models
+    environment:
+      - OLLAMA_MODELS=/ollama/models
+    ports:
+      - 11434:11434  # Exponer el puerto de Ollama
+    networks:
+      - net
+   
+
+  chroma1:
+    image: licmartinez827899/omnia-chroma:1.0  # Updated to use Docker Hub image
+
+    volumes:
+      - index_data1:/chroma/.chroma/index
+    ports:
+      - 8000:8000
+    environment:
+      - CHROMA_PORT=8000  # Define el puerto interno para Chroma1
+    command: uvicorn chromadb.app:app --host 0.0.0.0 --port 8000  # Define el puerto interno explícitamente
+    networks:
+      - net
+    
+  chroma2:
+    image:  licmartinez827899/omnia-chroma:1.0  # Updated to use Docker Hub image
+    volumes:
+      - index_data2:/chroma/.chroma/index  # Volumen exclusivo para ChromaDB 2
+    ports:
+      - 8001:8001  # Puerto para la segunda base de datos
+    environment:
+      - CHROMA_PORT=8001  # Define el puerto interno para Chroma2  
+    command: uvicorn chromadb.app:app --host 0.0.0.0 --port 8001  # Define el puerto interno explícitamente
+    networks:
+      - net
+
+
+  ui:
+    image: licmartinez827899/omnia:1.0  # Updated to use Docker Hub image
+    ports:
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:rw  # Bind Docker socket
+    depends_on:
+      - ollama
+      - chroma1
+      - chroma2
+    environment:
+      - MODEL=${MODEL_LIST}
+      - EMBEDDINGS_MODEL_NAME=${EMBEDDINGS_MODEL_NAME}
+      - TARGET_SOURCE_CHUNKS=${TARGET_SOURCE_CHUNKS}
+      - OLLAMA_HOST=${OLLAMA_HOST}  # <-- Variable para el host de Ollama
+    env_file: 
+      - .env  # Include the .env file for dynamic configuration
+    networks:
+      - net
+
+  ngrok:
+    image: licmartinez827899/omnia-ngrok:1.0  # Updated to use Docker Hub image
+    restart: unless-stopped
+    command:
+      - "start"
+      - "--all"
+      - "--config"
+      - "/etc/ngrok.yml"
+    volumes:
+      - ./ngrok.yml:/etc/ngrok.yml
+    ports:
+      - "4040:4040"  # Dashboard de Ngrok
+    networks:
+      - net  # Añadir la red `net`
+
+volumes:
+  index_data1:
+  index_data2:
+
+networks:
+  net:
+    driver: bridge

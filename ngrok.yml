@@ -1,0 +1,6 @@
+version: "2"
+authtoken: 2pLPNVCTSyLdnocCUUgI3ph8Ooj_k6Ah8MjbRMAgJLmgxigP
+tunnels:
+  ui:
+    addr: ui:8080
+    proto: http
