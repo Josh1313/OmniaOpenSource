@@ -1,7 +1,14 @@
-# Proyecto: Plataforma con Python, Streamlit y Bases de Datos Vectoriales
+# Proyecto: Plataforma Inteligente para Gestión de Modelos de IA y Recuperación de Información
 
 ## Descripción General
-Este proyecto es una aplicación diseñada para ofrecer una interfaz amigable para gestionar modelos de IA y bases de datos vectoriales. La aplicación utiliza un enfoque modular y seguro para integrar componentes como validación de correo electrónico, almacenamiento de datos vectoriales, y selección de modelos de machine learning.
+Este proyecto es una aplicación innovadora diseñada para potenciar el uso de Modelos de Lenguaje Extenso (LLMs) locales y en la nube, incluyendo OpenAI y Grok, integrados con un sistema de Recuperación de Información (RAG). Ofrece una interfaz amigable desarrollada en **Streamlit**, con capacidades avanzadas para:
+
+- Gestionar modelos de IA mediante un selector dinámico.
+- Incorporar bases de datos vectoriales para almacenamiento y recuperación eficiente de información.
+- Garantizar seguridad y facilidad de uso con tunelización segura y configuración personalizable.
+
+La aplicación combina potencia y simplicidad para habilitar a desarrolladores, investigadores y usuarios finales en la creación de soluciones basadas en inteligencia artificial.
+
 
 
 
@@ -31,32 +38,16 @@ Este proyecto es una aplicación diseñada para ofrecer una interfaz amigable pa
    - Actualización sencilla del token de Ngrok en `ngrok.yml`.
    - Selección de modelo predeterminado desde el archivo `.env`.
 
-## Instalación
 
-1. Clonar el repositorio:
-   ```bash
-   git clone https://github.com/tu-repo/tu-proyecto.git
-   cd tu-proyecto
-   ```
-
-2. Crear un entorno virtual e instalar dependencias:
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # En Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
-
-3. Configurar variables de entorno:
+1. Configurar variables de entorno:
    - Crear un archivo `.env`:
      ```env
      MODEL_LIST=llama3.2,llama3,mistral,tinyllama,phi3,llama2,brxce/stable-diffusion-prompt-generator,gemma2:2b
      ```
 
-4. Configurar Ngrok:
+2. Configurar Ngrok:
    - Editar el archivo `ngrok.yml` para incluir tu token:
      ```yaml
      authtoken: TU_NGROK_TOKEN
      ```
-
-## Uso
 
