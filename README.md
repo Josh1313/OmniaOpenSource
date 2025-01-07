@@ -135,8 +135,6 @@ docker-compose stop
 ```
 
 ### Step 11: Install  Nginx
-bash
-Copy code
 
 ```bash
 sudo apt install -y nginx
@@ -150,11 +148,8 @@ sudo nano /etc/nginx/sites-available/OmniaOpenSource
 ### Step 13: Paste the following Nginx configuration:
 ```bash
 server {
-   # listen 443 ssl;
     server_name YOUR-DOMAIN-NAME;
 
-   # ssl_certificate /etc/nginx/ssl/omnia.crt;
-   # ssl_certificate_key /etc/nginx/ssl/omnia.key;
 
     location / {
         proxy_pass http://localhost:8080;
@@ -201,10 +196,12 @@ sudo nano /etc/nginx/sites-available/OmniaOpenSource
 ```bash
 server {
     listen 443 ssl;
-    server_name YOUR-DOMAIN-NAME;
+    server_name omniaopensource.zapto.org;
 
-    ssl_certificate /etc/nginx/ssl/omnia.crt;
-    ssl_certificate_key /etc/nginx/ssl/omnia.key;
+    #ssl_certificate /etc/letsencrypt/live/omniaopensource.zapto.org/fullchain.pem;
+    #ssl_certificate_key /etc/letsencrypt/live/omniaopensource.zapto.org/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
     location / {
         proxy_pass http://localhost:8080;
@@ -218,10 +215,19 @@ server {
     }
 }
 
+server {
+    listen 80;
+    server_name omniaopensource.zapto.org;
+
+    return 301 https://$host$request_uri; # Redirigir HTTP a HTTPS
+}
+
+
 ```
 
-### Step 20: Check Disk Space
+### Step 20: Restart Nginx
 ```bash
+sudo nginx -t
 sudo systemctl restart nginx
 ```
 
