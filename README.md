@@ -50,3 +50,184 @@ This app helps experiment with various models to determine the best action based
      ```yaml
      authtoken: YOUR_NGROK_TOKEN
      ```
+---
+# Omnia Open Source Setup Guide
+
+This guide provides step-by-step instructions for setting up Omnia Open Source using Docker, Nginx, and Certbot for SSL. Copy the commands directly to your terminal to streamline the installation.
+
+---
+
+## Prerequisites
+
+- Ensure you have `sudo` privileges on your system.
+- Verify you are running a supported Linux distribution (e.g., Ubuntu).
+
+---
+
+## Installation Steps
+
+### Step 0: local host 8080  and also the safe tunnel with ngrok at port 4040
+```bash
+docker-compose up
+```
+
+   
+### Step 1: Check Disk Space
+```bash
+df -h
+```
+
+### Step 2: Update the system 
+```bash
+sudo apt update
+```
+
+### Step 3: install Docker
+```bash
+sudo apt install docker.io
+```
+
+### Step 4: start and enable dockers
+```bash
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+### Step 5: Install Docker Compose
+```bash
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+
+```
+
+### Step 6: Add your user to the Docker group
+```bash
+whoami # Identify the user
+sudo usermod -aG docker user
+
+```
+
+### Step 7: log out and log back in that way the changes can take effect
+```bash
+exit
+```
+
+### Step 8: Install Git
+```bash
+sudo apt install -y git
+```
+
+### Step 9: clone the repository and change from directory
+```bash
+git clone https://github.com/Josh1313/OmniaOpenSource.git
+cd OmniaOpenSource
+```
+
+### Step 10: Docker Comands to stop or run the app
+```bash
+docker-compose up 
+or 
+docker-compose up -d
+docker-compose down
+docker-compose start
+docker-compose stop
+```
+
+### Step 11: Install  Nginx
+bash
+Copy code
+
+```bash
+sudo apt install -y nginx
+```
+
+### Step 12: configure Nginx
+```bash
+sudo nano /etc/nginx/sites-available/OmniaOpenSource
+```
+
+### Step 13: Paste the following Nginx configuration:
+```bash
+server {
+   # listen 443 ssl;
+    server_name YOUR-DOMAIN-NAME;
+
+   # ssl_certificate /etc/nginx/ssl/omnia.crt;
+   # ssl_certificate_key /etc/nginx/ssl/omnia.key;
+
+    location / {
+        proxy_pass http://localhost:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+```
+
+### Step 14: Exit
+```bash
+Save and exit: CTRL+O, ENTER, CTRL+X
+```
+
+### Step 15: Enable the site:
+```bash
+sudo ln -s /etc/nginx/sites-available/OmniaOpenSource /etc/nginx/sites-enabled/
+sudo nginx -t
+```
+
+### Step 16: Install Cerbot
+```bash
+sudo apt install -y certbot python3-certbot-nginx
+```
+
+### Step 17:  Set up SSL with Certbot
+```bash
+sudo certbot --nginx -d YOUR-DOMAIN-NAME
+```
+
+### Step 18:  Update Nginx configuration with SSL
+```bash
+sudo nano /etc/nginx/sites-available/OmniaOpenSource
+
+```
+
+### Step 19: Replace with the following configuration:
+```bash
+server {
+    listen 443 ssl;
+    server_name YOUR-DOMAIN-NAME;
+
+    ssl_certificate /etc/nginx/ssl/omnia.crt;
+    ssl_certificate_key /etc/nginx/ssl/omnia.key;
+
+    location / {
+        proxy_pass http://localhost:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+```
+
+### Step 20: Check Disk Space
+```bash
+sudo systemctl restart nginx
+```
+
+### Step 21: TEST APP
+```bash
+http://YOUR EXTERNAL API:8080
+
+```
+
