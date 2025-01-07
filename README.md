@@ -196,10 +196,10 @@ sudo nano /etc/nginx/sites-available/OmniaOpenSource
 ```bash
 server {
     listen 443 ssl;
-    server_name omniaopensource.zapto.org;
+    server_name YOUR-DOMAIN-NAME;
 
-    #ssl_certificate /etc/letsencrypt/live/omniaopensource.zapto.org/fullchain.pem;
-    #ssl_certificate_key /etc/letsencrypt/live/omniaopensource.zapto.org/privkey.pem;
+    #ssl_certificate /etc/letsencrypt/live/YOUR-DOMAIN-NAME/fullchain.pem;
+    #ssl_certificate_key /etc/letsencrypt/live/YOUR-DOMAIN-NAME/privkey.pem;
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
@@ -217,7 +217,7 @@ server {
 
 server {
     listen 80;
-    server_name omniaopensource.zapto.org;
+    server_name YOUR-DOMAIN-NAME;
 
     return 301 https://$host$request_uri; # Redirigir HTTP a HTTPS
 }
