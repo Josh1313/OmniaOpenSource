@@ -237,14 +237,14 @@ http://YOUR EXTERNAL API:8080
 
 ```
 
-### Step 21: Conf Models
+### Step 22: Conf Models
 ```bash
 sudo nano .env
 
 ```
 
 
-### Step 21: Conf Ngrok Tunnel
+### Step 23: Conf Ngrok Tunnel
 ```bash
 sudo nano ngrok.yml
 
